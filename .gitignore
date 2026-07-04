@@ -1,0 +1,34 @@
+# Azure Functions
+bin/
+obj/
+appsettings.json
+local.settings.json
+.python_packages/
+
+# Secrets / local env
+.env
+*.env
+.env.*
+*.publishsettings
+*.PublishSettings
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Node
+node_modules/
+dist/
+
+# mise
+.mise.local.toml
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.log
