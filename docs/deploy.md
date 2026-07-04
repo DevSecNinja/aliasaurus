@@ -108,4 +108,14 @@ cp src/functions/local.settings.json.example src/functions/local.settings.json
 # edit values; local.settings.json is git-ignored
 mise run test    # Pester unit tests
 mise run lint    # PSScriptAnalyzer
+mise run dev     # local mock preview at http://localhost:7071
 ```
+
+### Preview the web UI locally (no Azure/M365)
+
+`mise run dev` starts a mock server that serves the real SPA and implements the
+`/aliases` API with an in-memory store, reusing the actual module logic (alias
+generation, warm pool, state transitions, speakable format). It needs no Azure,
+Exchange Online, Table Storage, or Easy Auth — ideal for seeing the UI before
+provisioning production. It is a preview only: data is in-memory and Exchange
+operations are not performed.

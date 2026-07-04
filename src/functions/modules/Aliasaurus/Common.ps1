@@ -61,11 +61,29 @@ function Resolve-AliasErrorStatus {
     return 500
 }
 
-function ConvertTo-AliasResponse {
+function Get-BodyProperty {
     <#
     .SYNOPSIS
-        Projects an alias record to the public API response shape (contract).
+        Null-safe read of a property from an HTTP request body (dictionary or object).
+    .DESCRIPTION
+        The Functions worker may deliver a JSON body as a hashtable or a
+        PSCustomObject; under StrictMode, accessing a missing member on the latter
+        throws. This returns $null for absent properties in either case.
     #>
+    [CmdletBinding()]
+    param($Body, [Parameter(Mandatory)][string]$Name)
+
+    if ($null -eq $Body) { return $null }
+    if ($Body -is [System.Collections.IDictionary]) {
+        if ($Body.Contains($Name)) { return $Body[$Name] }
+        return $null
+    }
+    $prop = $Body.PSObject.Properties[$Name]
+    if ($prop) { return $prop.Value }
+    return $null
+}
+
+function ConvertTo-AliasResponse {
     [CmdletBinding()]
     param([Parameter(Mandatory)][psobject]$Record)
 

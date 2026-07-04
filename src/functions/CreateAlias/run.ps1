@@ -11,9 +11,10 @@ try {
 
     Connect-Aliasaurus -Config $config
 
-    $site = $Request.Body.site
-    $note = $Request.Body.note
-    $format = if ($Request.Body.format) { ([string]$Request.Body.format).ToLowerInvariant() } else { 'base32' }
+    $site = Get-BodyProperty -Body $Request.Body -Name 'site'
+    $note = Get-BodyProperty -Body $Request.Body -Name 'note'
+    $formatValue = Get-BodyProperty -Body $Request.Body -Name 'format'
+    $format = if ($formatValue) { ([string]$formatValue).ToLowerInvariant() } else { 'base32' }
     if ($format -notin @('base32', 'speakable')) {
         throw (New-AliasError -StatusCode 400 -Message 'format must be "base32" or "speakable".')
     }

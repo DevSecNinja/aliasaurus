@@ -22,3 +22,7 @@ run = "pwsh -NoProfile -File ./build/Invoke-Tests.ps1"
 [tasks.lint]
 description = "Run PSScriptAnalyzer over the codebase"
 run = "pwsh -NoProfile -File ./build/Invoke-Lint.ps1"
+
+[tasks.dev]
+description = "Run the local mock dev server to preview the web UI"
+run = "pwsh -NoProfile -File ./build/Start-DevServer.ps1"
