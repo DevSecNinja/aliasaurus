@@ -96,7 +96,7 @@ jobs:
         env:
           AZURE_RESOURCE_GROUP: ${{ vars.AZURE_RESOURCE_GROUP }}
           AZURE_FUNCTION_APP: ${{ vars.AZURE_FUNCTION_APP }}
-        run: |
+        run: |-
           cd src/functions
           zip -r ../../app.zip . -x "local.settings.json"
           cd ../..

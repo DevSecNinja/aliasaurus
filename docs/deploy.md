@@ -75,14 +75,14 @@ Set these as repository **variables** (Settings → Secrets and variables →
 Actions → Variables), and configure an Entra app with a **federated credential**
 trusting this repo's `production` environment:
 
-| Variable | Example |
-| --- | --- |
-| `AZURE_CLIENT_ID` | app registration client ID |
-| `AZURE_TENANT_ID` | tenant ID |
-| `AZURE_SUBSCRIPTION_ID` | subscription ID |
-| `AZURE_RESOURCE_GROUP` | `aliasaurus-rg` |
-| `AZURE_FUNCTION_APP` | `aliasaurus-func` |
-| `ALIAS_DOMAIN`, `M365_ORGANIZATION`, `PRIMARY_MAILBOX`, `INTAKE_MAILBOXES`, `GRAVEYARD_MAILBOXES` | deploy parameters |
+| Variable                                                                                          | Example                    |
+| ------------------------------------------------------------------------------------------------- | -------------------------- |
+| `AZURE_CLIENT_ID`                                                                                 | app registration client ID |
+| `AZURE_TENANT_ID`                                                                                 | tenant ID                  |
+| `AZURE_SUBSCRIPTION_ID`                                                                           | subscription ID            |
+| `AZURE_RESOURCE_GROUP`                                                                            | `aliasaurus-rg`            |
+| `AZURE_FUNCTION_APP`                                                                              | `aliasaurus-func`          |
+| `ALIAS_DOMAIN`, `M365_ORGANIZATION`, `PRIMARY_MAILBOX`, `INTAKE_MAILBOXES`, `GRAVEYARD_MAILBOXES` | deploy parameters          |
 
 release-please additionally uses the org-provided `RELEASE_PLEASE_APP_ID`
 variable and `RELEASE_PLEASE_APP_PRIVATE_KEY` secret.
