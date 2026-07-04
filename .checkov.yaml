@@ -1,3 +1,4 @@
+---
 # Checkov configuration for aliasaurus IaC.
 # Documents deliberate exceptions for the Function App that serves the web UI.
 skip-check:
