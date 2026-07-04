@@ -1,0 +1,106 @@
+---
+name: CI/CD
+
+# Single combined pipeline:
+#   - test:   runs on every PR and push to main (Pester, PSScriptAnalyzer, Bicep build).
+#   - deploy: runs on version tags (created by release-please) or manual dispatch.
+#
+# Deploy uses OIDC with the Azure CLI (federated credentials) rather than the
+# azure/* actions. Configure these repository variables/secrets first:
+#   vars:   AZURE_CLIENT_ID, AZURE_TENANT_ID, AZURE_SUBSCRIPTION_ID,
+#           AZURE_RESOURCE_GROUP, AZURE_FUNCTION_APP,
+#           ALIAS_DOMAIN, M365_ORGANIZATION, PRIMARY_MAILBOX,
+#           INTAKE_MAILBOXES, GRAVEYARD_MAILBOXES
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - "v*"
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+
+      - name: Run Pester unit tests
+        shell: pwsh
+        run: ./build/Invoke-Tests.ps1
+
+      - name: Run PSScriptAnalyzer
+        shell: pwsh
+        run: ./build/Invoke-Lint.ps1
+
+      - name: Validate Bicep
+        run: az bicep build --file infra/main.bicep
+
+  deploy:
+    needs: test
+    if: startsWith(github.ref, 'refs/tags/v') || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    environment: production
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+
+      - name: Azure login (OIDC via Azure CLI)
+        env:
+          AZURE_CLIENT_ID: ${{ vars.AZURE_CLIENT_ID }}
+          AZURE_TENANT_ID: ${{ vars.AZURE_TENANT_ID }}
+          AZURE_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+        run: |
+          token=$(curl -sSL \
+            -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
+            "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=api://AzureADTokenExchange" | jq -r '.value')
+          az login --service-principal \
+            --username "$AZURE_CLIENT_ID" \
+            --tenant "$AZURE_TENANT_ID" \
+            --federated-token "$token" >/dev/null
+          az account set --subscription "$AZURE_SUBSCRIPTION_ID"
+
+      - name: Deploy infrastructure (Bicep)
+        env:
+          AZURE_RESOURCE_GROUP: ${{ vars.AZURE_RESOURCE_GROUP }}
+          ALIAS_DOMAIN: ${{ vars.ALIAS_DOMAIN }}
+          M365_ORGANIZATION: ${{ vars.M365_ORGANIZATION }}
+          PRIMARY_MAILBOX: ${{ vars.PRIMARY_MAILBOX }}
+          INTAKE_MAILBOXES: ${{ vars.INTAKE_MAILBOXES }}
+          GRAVEYARD_MAILBOXES: ${{ vars.GRAVEYARD_MAILBOXES }}
+        run: |
+          az deployment group create \
+            --resource-group "$AZURE_RESOURCE_GROUP" \
+            --template-file infra/main.bicep \
+            --parameters \
+              aliasDomain="$ALIAS_DOMAIN" \
+              organization="$M365_ORGANIZATION" \
+              primaryMailbox="$PRIMARY_MAILBOX" \
+              intakeMailboxes="$INTAKE_MAILBOXES" \
+              graveyardMailboxes="$GRAVEYARD_MAILBOXES"
+
+      - name: Package and deploy the Functions app
+        env:
+          AZURE_RESOURCE_GROUP: ${{ vars.AZURE_RESOURCE_GROUP }}
+          AZURE_FUNCTION_APP: ${{ vars.AZURE_FUNCTION_APP }}
+        run: |
+          cd src/functions
+          zip -r ../../app.zip . -x "local.settings.json"
+          cd ../..
+          az functionapp deployment source config-zip \
+            --resource-group "$AZURE_RESOURCE_GROUP" \
+            --name "$AZURE_FUNCTION_APP" \
+            --src app.zip

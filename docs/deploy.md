@@ -55,6 +55,38 @@ func azure functionapp publish <functionAppName>
 Trigger `ReplenishPool` to warm the pool, then run through the scenarios in
 `specs/001-alias-management/quickstart.md` (V1-A through V1-F).
 
+## CI/CD
+
+Two GitHub Actions workflows drive delivery, plus adopted org workflows:
+
+- **`ci-cd.yml`** (single pipeline):
+  - **test** job on every PR and push to `main`: Pester unit tests,
+    PSScriptAnalyzer, and `az bicep build`.
+  - **deploy** job on version tags (`v*`, created by release-please) or manual
+    dispatch: logs in to Azure via **OIDC + the Azure CLI** (no stored
+    credentials, no `azure/*` actions), deploys `infra/main.bicep`, and
+    zip-deploys the Functions app.
+- **`lint.yml`**, **`config-sync.yml`**, **`release-please.yml`**: adopted
+  DevSecNinja reusable workflows.
+
+### Required repository configuration for deploy
+
+Set these as repository **variables** (Settings → Secrets and variables →
+Actions → Variables), and configure an Entra app with a **federated credential**
+trusting this repo's `production` environment:
+
+| Variable | Example |
+| --- | --- |
+| `AZURE_CLIENT_ID` | app registration client ID |
+| `AZURE_TENANT_ID` | tenant ID |
+| `AZURE_SUBSCRIPTION_ID` | subscription ID |
+| `AZURE_RESOURCE_GROUP` | `aliasaurus-rg` |
+| `AZURE_FUNCTION_APP` | `aliasaurus-func` |
+| `ALIAS_DOMAIN`, `M365_ORGANIZATION`, `PRIMARY_MAILBOX`, `INTAKE_MAILBOXES`, `GRAVEYARD_MAILBOXES` | deploy parameters |
+
+release-please additionally uses the org-provided `RELEASE_PLEASE_APP_ID`
+variable and `RELEASE_PLEASE_APP_PRIVATE_KEY` secret.
+
 ## Local development
 
 ```sh
