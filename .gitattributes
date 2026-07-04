@@ -1,0 +1,12 @@
+# Normalize line endings to LF for text files across platforms.
+* text=auto eol=lf
+
+*.ps1  text eol=lf
+*.psm1 text eol=lf
+*.psd1 text eol=lf
+*.bicep text eol=lf
+*.json text eol=lf
+*.json5 text eol=lf
+*.md   text eol=lf
+*.yaml text eol=lf
+*.yml  text eol=lf

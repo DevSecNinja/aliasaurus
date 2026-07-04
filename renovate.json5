@@ -1,0 +1,9 @@
+{
+  $schema: 'https://docs.renovatebot.com/renovate-schema.json',
+  extends: [
+    'github>DevSecNinja/.github',
+  ],
+  // The Azure Functions managed-dependency format (ExchangeOnlineManagement = '3.*')
+  // in src/functions/requirements.psd1 is intentionally minor-floating and is not
+  // pinned by Renovate.
+}

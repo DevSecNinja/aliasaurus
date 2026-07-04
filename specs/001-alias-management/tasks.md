@@ -25,10 +25,10 @@ IaC under `infra/`, tests under `tests/`.
 
 **Purpose**: Project skeleton and tooling.
 
-- [ ] T001 Create the project structure (`src/functions/`, `src/functions/modules/Aliasaurus/`, `infra/`, `tests/unit/`, `tests/integration/`) per plan.md
-- [ ] T002 Scaffold the Azure Functions PowerShell app in `src/functions/` (`host.json`, `profile.ps1`, `local.settings.json` template) and pin module versions in `src/functions/requirements.psd1` (ExchangeOnlineManagement, Microsoft.Graph.Authentication, Azure.Data.Tables)
-- [ ] T003 [P] Configure Pester and PSScriptAnalyzer as mise-managed tools/tasks in `mise.toml`
-- [ ] T004 [P] Add `renovate.json5` extending `github>DevSecNinja/.github` with `# renovate:` comments for the pinned PowerShell modules
+- [X] T001 Create the project structure (`src/functions/`, `src/functions/modules/Aliasaurus/`, `infra/`, `tests/unit/`, `tests/integration/`) per plan.md
+- [X] T002 Scaffold the Azure Functions PowerShell app in `src/functions/` (`host.json`, `profile.ps1`, `local.settings.json` template) and pin module versions in `src/functions/requirements.psd1` (ExchangeOnlineManagement, Microsoft.Graph.Authentication, Azure.Data.Tables)
+- [X] T003 [P] Configure Pester and PSScriptAnalyzer as mise-managed tools/tasks in `mise.toml`
+- [X] T004 [P] Add `renovate.json5` extending `github>DevSecNinja/.github` with `# renovate:` comments for the pinned PowerShell modules
 
 ---
 
@@ -38,14 +38,14 @@ IaC under `infra/`, tests under `tests/`.
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete.
 
-- [ ] T005 Author `infra/main.bicep` provisioning the Function App (PowerShell, system-assigned managed identity), Storage account, and the `aliases` table
-- [ ] T006 [P] Add Bicep role assignment granting the managed identity a Storage Table Data Contributor role scoped to the `aliases` table in `infra/main.bicep`
-- [ ] T007 Author `infra/exchange-prereqs.md` + `scripts/Setup-ExchangePrereqs.ps1` documenting/scripting the Exchange side: custom RBAC management role scoped to `Set-Mailbox`/`Get-Mailbox`/mail-flow cmdlets, `Exchange.ManageAsApp` grant to the MI, intake & graveyard shared mailboxes, intake→primary forwarding, and the graveyard "delete without notifying anyone" mail-flow rule
-- [ ] T008 Implement managed-identity connection to Exchange Online and Microsoft Graph in `src/functions/profile.ps1` and `src/functions/modules/Aliasaurus/Connect.ps1`
-- [ ] T009 [P] Implement the ledger data-access layer (Azure.Data.Tables CRUD for Alias records, per data-model.md) in `src/functions/modules/Aliasaurus/Ledger.ps1`
-- [ ] T010 [P] Implement the non-guessable alias generator (random 12-char base32 local part, uniqueness check) in `src/functions/modules/Aliasaurus/AliasGenerator.ps1`
-- [ ] T011 [P] Implement configuration loading (custom domain, intake/graveyard mailbox UPNs, pool target size, low-water mark) in `src/functions/modules/Aliasaurus/Config.ps1`
-- [ ] T012 Add structured logging and error-handling helpers in `src/functions/modules/Aliasaurus/Common.ps1`
+- [X] T005 Author `infra/main.bicep` provisioning the Function App (PowerShell, system-assigned managed identity), Storage account, and the `aliases` table
+- [X] T006 [P] Add Bicep role assignment granting the managed identity a Storage Table Data Contributor role scoped to the `aliases` table in `infra/main.bicep`
+- [X] T007 Author `infra/exchange-prereqs.md` + `scripts/Setup-ExchangePrereqs.ps1` documenting/scripting the Exchange side: custom RBAC management role scoped to `Set-Mailbox`/`Get-Mailbox`/mail-flow cmdlets, `Exchange.ManageAsApp` grant to the MI, intake & graveyard shared mailboxes, intake→primary forwarding, and the graveyard "delete without notifying anyone" mail-flow rule
+- [X] T008 Implement managed-identity connection to Exchange Online and Microsoft Graph in `src/functions/profile.ps1` and `src/functions/modules/Aliasaurus/Connect.ps1`
+- [X] T009 [P] Implement the ledger data-access layer (Azure.Data.Tables CRUD for Alias records, per data-model.md) in `src/functions/modules/Aliasaurus/Ledger.ps1`
+- [X] T010 [P] Implement the non-guessable alias generator (random 12-char base32 local part, uniqueness check) in `src/functions/modules/Aliasaurus/AliasGenerator.ps1`
+- [X] T011 [P] Implement configuration loading (custom domain, intake/graveyard mailbox UPNs, pool target size, low-water mark) in `src/functions/modules/Aliasaurus/Config.ps1`
+- [X] T012 Add structured logging and error-handling helpers in `src/functions/modules/Aliasaurus/Common.ps1`
 
 **Checkpoint**: Foundation ready — user stories can proceed.
 
@@ -59,15 +59,15 @@ IaC under `infra/`, tests under `tests/`.
 
 ### Tests for User Story 1
 
-- [ ] T013 [P] [US1] Pester unit tests for alias generation (uniqueness, non-guessability, no site name leakage) in `tests/unit/AliasGenerator.Tests.ps1`
-- [ ] T014 [P] [US1] Pester unit tests for pool selection and the `pool → active` ledger transition in `tests/unit/CreateAlias.Tests.ps1`
+- [X] T013 [P] [US1] Pester unit tests for alias generation (uniqueness, non-guessability, no site name leakage) in `tests/unit/AliasGenerator.Tests.ps1`
+- [X] T014 [P] [US1] Pester unit tests for pool selection and the `pool → active` ledger transition in `tests/unit/CreateAlias.Tests.ps1`
 
 ### Implementation for User Story 1
 
-- [ ] T015 [US1] Implement the `ReplenishPool` timer function (add warmed proxy addresses to the intake mailbox, write `pool` ledger rows up to the target size) in `src/functions/ReplenishPool/run.ps1` and `function.json`
-- [ ] T016 [US1] Implement the `CreateAlias` HTTP function (select a warm alias, set `site`/`assignedUtc`, mark `active`; fall back to on-demand creation when the pool is empty) in `src/functions/CreateAlias/run.ps1` and `function.json`, per `contracts/control-api.yaml` `POST /aliases`
-- [ ] T017 [US1] Implement capacity handling: spill to the next intake mailbox or return `507` when all intake mailboxes are at the 300-proxy limit (FR-013) in `src/functions/modules/Aliasaurus/Mailbox.ps1`
-- [ ] T018 [US1] Pester integration test (gated) creating an alias and verifying inbox delivery + attribution in `tests/integration/CreateAlias.Integration.Tests.ps1`
+- [X] T015 [US1] Implement the `ReplenishPool` timer function (add warmed proxy addresses to the intake mailbox, write `pool` ledger rows up to the target size) in `src/functions/ReplenishPool/run.ps1` and `function.json`
+- [X] T016 [US1] Implement the `CreateAlias` HTTP function (select a warm alias, set `site`/`assignedUtc`, mark `active`; fall back to on-demand creation when the pool is empty) in `src/functions/CreateAlias/run.ps1` and `function.json`, per `contracts/control-api.yaml` `POST /aliases`
+- [X] T017 [US1] Implement capacity handling: spill to the next intake mailbox or return `507` when all intake mailboxes are at the 300-proxy limit (FR-013) in `src/functions/modules/Aliasaurus/Mailbox.ps1`
+- [X] T018 [US1] Pester integration test (gated) creating an alias and verifying inbox delivery + attribution in `tests/integration/CreateAlias.Integration.Tests.ps1`
 
 **Checkpoint**: MVP — aliases can be issued and receive mail instantly.
 
@@ -81,13 +81,13 @@ IaC under `infra/`, tests under `tests/`.
 
 ### Tests for User Story 2
 
-- [ ] T019 [P] [US2] Pester unit tests for the `active ↔ disabled` transitions and intake↔graveyard proxy-move logic in `tests/unit/SetAliasState.Tests.ps1`
+- [X] T019 [P] [US2] Pester unit tests for the `active ↔ disabled` transitions and intake↔graveyard proxy-move logic in `tests/unit/SetAliasState.Tests.ps1`
 
 ### Implementation for User Story 2
 
-- [ ] T020 [US2] Implement the `SetAliasState` HTTP function (disable: move the proxy from intake to graveyard, set `disabled`; enable: reverse) in `src/functions/SetAliasState/run.ps1` and `function.json`, per `contracts/control-api.yaml` `POST /aliases/{address}/disable|enable`
-- [ ] T021 [US2] Add the proxy-move operations (intake↔graveyard, idempotent) to `src/functions/modules/Aliasaurus/Mailbox.ps1`
-- [ ] T022 [US2] Pester integration test (gated) verifying disabled alias is silently dropped (no bounce), other aliases unaffected, and re-enable resumes delivery in `tests/integration/SetAliasState.Integration.Tests.ps1`
+- [X] T020 [US2] Implement the `SetAliasState` HTTP function (disable: move the proxy from intake to graveyard, set `disabled`; enable: reverse) in `src/functions/SetAliasState/run.ps1` and `function.json`, per `contracts/control-api.yaml` `POST /aliases/{address}/disable|enable`
+- [X] T021 [US2] Add the proxy-move operations (intake↔graveyard, idempotent) to `src/functions/modules/Aliasaurus/Mailbox.ps1`
+- [X] T022 [US2] Pester integration test (gated) verifying disabled alias is silently dropped (no bounce), other aliases unaffected, and re-enable resumes delivery in `tests/integration/SetAliasState.Integration.Tests.ps1`
 
 **Checkpoint**: US1 and US2 both work independently.
 
@@ -101,12 +101,12 @@ IaC under `infra/`, tests under `tests/`.
 
 ### Tests for User Story 3
 
-- [ ] T023 [P] [US3] Pester unit tests for inventory projection and status filtering (pool entries excluded) in `tests/unit/ListAliases.Tests.ps1`
+- [X] T023 [P] [US3] Pester unit tests for inventory projection and status filtering (pool entries excluded) in `tests/unit/ListAliases.Tests.ps1`
 
 ### Implementation for User Story 3
 
-- [ ] T024 [US3] Implement the `ListAliases` HTTP function (read the ledger, optional Graph `proxyAddresses` reconciliation, exclude `pool` entries, optional status filter) in `src/functions/ListAliases/run.ps1` and `function.json`, per `contracts/control-api.yaml` `GET /aliases`
-- [ ] T025 [US3] Add an address→site attribution helper in `src/functions/modules/Aliasaurus/Ledger.ps1`
+- [X] T024 [US3] Implement the `ListAliases` HTTP function (read the ledger, optional Graph `proxyAddresses` reconciliation, exclude `pool` entries, optional status filter) in `src/functions/ListAliases/run.ps1` and `function.json`, per `contracts/control-api.yaml` `GET /aliases`
+- [X] T025 [US3] Add an address→site attribution helper in `src/functions/modules/Aliasaurus/Ledger.ps1`
 
 **Checkpoint**: All user stories independently functional.
 
@@ -114,10 +114,10 @@ IaC under `infra/`, tests under `tests/`.
 
 ## Phase 6: Polish & Cross-Cutting Concerns
 
-- [ ] T026 [P] Update `README.md` and add `docs/deploy.md` with deploy/run/setup instructions (mise, Bicep, Exchange prereqs)
-- [ ] T027 [P] Validate `specs/001-alias-management/contracts/control-api.yaml` against the implemented function routes
-- [ ] T028 Run the `quickstart.md` validation scenarios (V1-A through V1-F) end to end
-- [ ] T029 PSScriptAnalyzer + formatting pass across `src/` and `tests/`; verify RBAC scope is least-privilege (no broad admin roles)
+- [X] T026 [P] Update `README.md` and add `docs/deploy.md` with deploy/run/setup instructions (mise, Bicep, Exchange prereqs)
+- [X] T027 [P] Validate `specs/001-alias-management/contracts/control-api.yaml` against the implemented function routes
+- [ ] T028 Run the `quickstart.md` validation scenarios (V1-A through V1-F) end to end _(pending: requires a live tenant/Azure deployment)_
+- [X] T029 PSScriptAnalyzer + formatting pass across `src/` and `tests/`; verify RBAC scope is least-privilege (no broad admin roles)
 
 ---
 
