@@ -1,0 +1,17 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "FUNCTIONS_WORKER_RUNTIME": "powershell",
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "ALIAS_DOMAIN": "example.com",
+    "M365_ORGANIZATION": "example.onmicrosoft.com",
+    "PRIMARY_MAILBOX": "you@example.com",
+    "INTAKE_MAILBOXES": "intake@example.com",
+    "GRAVEYARD_MAILBOXES": "graveyard@example.com",
+    "LEDGER_STORAGE_ACCOUNT": "aliasaurusledger",
+    "LEDGER_TABLE": "aliases",
+    "POOL_TARGET": "25",
+    "POOL_LOW_WATER": "10",
+    "MAX_PROXIES_PER_MAILBOX": "300"
+  }
+}
