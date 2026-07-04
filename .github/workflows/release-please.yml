@@ -1,0 +1,29 @@
+---
+name: Release Please
+
+# On every push to main, opens/updates a release PR with the next version's
+# CHANGELOG bump. Merging that PR creates the vX.Y.Z tag.
+#
+# Per-repo config: release-please-config.json, .release-please-manifest.json
+# Requires org-provided RELEASE_PLEASE_APP_ID var and RELEASE_PLEASE_APP_PRIVATE_KEY secret.
+# Onboarding: https://github.com/DevSecNinja/.github/blob/main/docs/release-please-onboarding.md
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  release-please:
+    uses: DevSecNinja/.github/.github/workflows/release-please.yml@27fd66740c629ea38380dcd3bf93e7bc74c54247 # v1.9.0
+    permissions:
+      contents: write
+      pull-requests: write
+    with:
+      app-id: ${{ vars.RELEASE_PLEASE_APP_ID }}
+    secrets:
+      app-private-key: ${{ secrets.RELEASE_PLEASE_APP_PRIVATE_KEY }}

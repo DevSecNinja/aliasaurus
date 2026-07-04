@@ -18,7 +18,7 @@ intake/graveyard mailboxes and mail routing. Run them once per tenant, after
    the graveyard mailbox (silent drop, no NDR).
 4. **Custom management role**: scoped to `Set-Mailbox` and `Get-Mailbox`, assigned
    to the managed identity via a service principal in Exchange (`New-ServicePrincipal`
-   + `New-ManagementRoleAssignment`).
+   - `New-ManagementRoleAssignment`).
 
 ## Prerequisites
 
@@ -45,5 +45,5 @@ The script is idempotent: it skips resources that already exist.
 - The 300-proxy-address limit applies per mailbox. Provision additional intake or
   graveyard shared mailboxes and add them to `INTAKE_MAILBOXES` /
   `GRAVEYARD_MAILBOXES` when a mailbox nears the limit.
-- Sending *as* an alias (`SendFromAliasEnabled`) is not required for V1 (aliases
+- Sending _as_ an alias (`SendFromAliasEnabled`) is not required for V1 (aliases
   are receive-only) and is deferred to V2.

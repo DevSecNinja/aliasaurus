@@ -51,15 +51,15 @@ mailboxes.
 
 ## Constitution Check
 
-*GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
+_GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
 
-| Principle | Status | Notes |
-|-----------|--------|-------|
-| I. M365-Native Mail Transport | ✅ PASS | Exchange Online is the sole transport; no SMTP relay; no third party. Delivery via shared-mailbox forwarding; disable via EXO mail-flow rule. |
-| II. Stateless, Server-less Control Plane | ✅ PASS | Azure Functions only; Table Storage holds alias metadata only; message bodies never persisted. |
-| III. Least-Privilege Managed Identity | ✅ PASS | System-assigned MI; custom Exchange RBAC role scoped to the cmdlets used; Table Storage data-plane role scoped to the ledger. No secrets. |
-| IV. Spec-First & ADR-Backed | ✅ PASS | Plan derives from approved spec; cross-cutting infra decision recorded in ADR-0002. |
-| V. Reproducible, Pinned Tooling | ✅ PASS | mise-pinned tooling, Bicep IaC, pinned module versions, Renovate; spaces for indentation. |
+| Principle                                | Status  | Notes                                                                                                                                         |
+| ---------------------------------------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| I. M365-Native Mail Transport            | ✅ PASS | Exchange Online is the sole transport; no SMTP relay; no third party. Delivery via shared-mailbox forwarding; disable via EXO mail-flow rule. |
+| II. Stateless, Server-less Control Plane | ✅ PASS | Azure Functions only; Table Storage holds alias metadata only; message bodies never persisted.                                                |
+| III. Least-Privilege Managed Identity    | ✅ PASS | System-assigned MI; custom Exchange RBAC role scoped to the cmdlets used; Table Storage data-plane role scoped to the ledger. No secrets.     |
+| IV. Spec-First & ADR-Backed              | ✅ PASS | Plan derives from approved spec; cross-cutting infra decision recorded in ADR-0002.                                                           |
+| V. Reproducible, Pinned Tooling          | ✅ PASS | mise-pinned tooling, Bicep IaC, pinned module versions, Renovate; spaces for indentation.                                                     |
 
 **Post-design re-check**: ✅ PASS — no new violations introduced by the Phase 1
 design; no entries required in Complexity Tracking.

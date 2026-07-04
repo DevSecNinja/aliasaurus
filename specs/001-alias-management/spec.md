@@ -8,7 +8,7 @@
 
 **Input**: User description: "V1 receive-and-manage: create disposable per-site email aliases, track them in a ledger, and disable them"
 
-## User Scenarios & Testing *(mandatory)*
+## User Scenarios & Testing _(mandatory)_
 
 ### User Story 1 - Create a disposable alias for a site (Priority: P1)
 
@@ -110,7 +110,7 @@ date accurately.
   requests an alias, the system MUST still fulfil the request (falling back to
   on-demand creation) and MUST NOT leave the user without an alias.
 
-## Requirements *(mandatory)*
+## Requirements _(mandatory)_
 
 ### Functional Requirements
 
@@ -145,7 +145,7 @@ date accurately.
   pre-warmed, ready-to-use aliases, so that issuing an alias to the user is
   instantaneous and the issued alias is active on first use.
 
-### Key Entities *(include if feature involves data)*
+### Key Entities _(include if feature involves data)_
 
 - **Alias**: A unique disposable email address on the user's domain. Attributes:
   the address, associated site/context, creation timestamp, status (active or
@@ -155,7 +155,7 @@ date accurately.
   label.
 - **Ledger**: The authoritative inventory of all aliases and their attributes.
 
-## Success Criteria *(mandatory)*
+## Success Criteria _(mandatory)_
 
 ### Measurable Outcomes
 
@@ -174,7 +174,7 @@ date accurately.
 ## Assumptions
 
 - **Receive-only for V1**: Aliases are used to receive mail only. Sending or
-  replying *as* an alias is explicitly out of scope for V1 and is deferred to V2.
+  replying _as_ an alias is explicitly out of scope for V1 and is deferred to V2.
 - **Pre-warmed availability (confirmed)**: To satisfy immediate usability
   (FR-011, FR-014, SC-002), the system keeps a small supply of ready aliases
   warmed ahead of time so a freshly issued alias is active on first use. This
