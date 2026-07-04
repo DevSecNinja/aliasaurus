@@ -8,7 +8,7 @@
 
 **Input**: User description: "Web UI served from the Function App, Entra Easy Auth for a single user, to create/list/disable/enable aliases from laptop and phone"
 
-## User Scenarios & Testing *(mandatory)*
+## User Scenarios & Testing _(mandatory)_
 
 ### User Story 1 - Create and copy an alias from any device (Priority: P1)
 
@@ -90,7 +90,7 @@ string, and that it is still unique and not derived from the site name.
 - **Copy unsupported**: if clipboard access is unavailable, the address is still
   selectable for manual copy.
 
-## Requirements *(mandatory)*
+## Requirements _(mandatory)_
 
 ### Functional Requirements
 
@@ -113,14 +113,14 @@ string, and that it is still unique and not derived from the site name.
 - **FR-010**: The UI MUST surface errors (e.g. capacity reached, pool depleted,
   network failure) in plain language without losing the owner's input.
 
-### Key Entities *(include if feature involves data)*
+### Key Entities _(include if feature involves data)_
 
 - **Alias (view)**: as defined in feature 001 (address, site, status, created);
   the web app presents and mutates these; it introduces no new stored entity.
 - **Owner identity**: the single authorized user; not stored by the app beyond
   configuration of who the owner is.
 
-## Success Criteria *(mandatory)*
+## Success Criteria _(mandatory)_
 
 ### Measurable Outcomes
 

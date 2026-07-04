@@ -4,6 +4,11 @@ param($Request, $TriggerMetadata)
 
 try {
     $config = Get-AliasaurusConfig
+
+    if (-not (Test-RequestOwner -Request $Request -Config $config)) {
+        throw (New-AliasError -StatusCode 403 -Message 'Forbidden.')
+    }
+
     Connect-Aliasaurus -Config $config
 
     $address = [string]$Request.Params.address

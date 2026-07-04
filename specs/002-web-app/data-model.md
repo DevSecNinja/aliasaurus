@@ -14,8 +14,8 @@ aliases and triggers create/disable/enable.
 
 Provided per-request by Easy Auth; used only for authorization.
 
-| Field | Source | Use |
-|-------|--------|-----|
+| Field                | Source                              | Use                                                          |
+| -------------------- | ----------------------------------- | ------------------------------------------------------------ |
 | principal name (UPN) | `X-MS-CLIENT-PRINCIPAL-NAME` header | Compared to `OWNER_UPN`; request allowed only if it matches. |
 
 ## New alias-generation option

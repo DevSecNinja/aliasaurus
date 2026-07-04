@@ -6,6 +6,7 @@
     "ALIAS_DOMAIN": "example.com",
     "M365_ORGANIZATION": "example.onmicrosoft.com",
     "PRIMARY_MAILBOX": "you@example.com",
+    "OWNER_UPN": "you@example.com",
     "INTAKE_MAILBOXES": "intake@example.com",
     "GRAVEYARD_MAILBOXES": "graveyard@example.com",
     "LEDGER_STORAGE_ACCOUNT": "aliasaurusledger",

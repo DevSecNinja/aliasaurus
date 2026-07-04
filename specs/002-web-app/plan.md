@@ -46,15 +46,15 @@ assets are a single small HTML document.
 
 ## Constitution Check
 
-*GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
+_GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
 
-| Principle | Status | Notes |
-|-----------|--------|-------|
-| I. M365-Native Mail Transport | ✅ PASS | No mail-path change; UI only calls the existing control API. |
-| II. Stateless, Server-less Control Plane | ✅ PASS | UI is static content served by a function; no new state; no message bodies. |
-| III. Least-Privilege Managed Identity | ✅ PASS | Easy Auth (Entra) gates users; API still uses the MI for Exchange/Storage; browser holds only a session cookie, no keys. |
-| IV. Spec-First & ADR-Backed | ✅ PASS | Derives from the approved spec; the auth/hosting choice is recorded in ADR-0003. |
-| V. Reproducible, Pinned Tooling | ✅ PASS | No new toolchain; framework-free UI; mise/Renovate unchanged. |
+| Principle                                | Status  | Notes                                                                                                                    |
+| ---------------------------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------ |
+| I. M365-Native Mail Transport            | ✅ PASS | No mail-path change; UI only calls the existing control API.                                                             |
+| II. Stateless, Server-less Control Plane | ✅ PASS | UI is static content served by a function; no new state; no message bodies.                                              |
+| III. Least-Privilege Managed Identity    | ✅ PASS | Easy Auth (Entra) gates users; API still uses the MI for Exchange/Storage; browser holds only a session cookie, no keys. |
+| IV. Spec-First & ADR-Backed              | ✅ PASS | Derives from the approved spec; the auth/hosting choice is recorded in ADR-0003.                                         |
+| V. Reproducible, Pinned Tooling          | ✅ PASS | No new toolchain; framework-free UI; mise/Renovate unchanged.                                                            |
 
 **Post-design re-check**: ✅ PASS — no new violations; Complexity Tracking empty.
 
