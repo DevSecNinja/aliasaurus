@@ -2,7 +2,7 @@ Set-StrictMode -Version Latest
 
 $here = $PSScriptRoot
 
-foreach ($component in @('Common', 'Config', 'AliasGenerator', 'Ledger', 'Mailbox', 'Connect')) {
+foreach ($component in @('Common', 'Config', 'AliasGenerator', 'Ledger', 'Mailbox', 'Auth', 'Connect')) {
     . (Join-Path $here "$component.ps1")
 }
 
@@ -14,6 +14,7 @@ Export-ModuleMember -Function @(
     'Get-AliasaurusConfig',
     'New-AliasLocalPart',
     'New-AliasAddress',
+    'New-SpeakableAlias',
     'New-AliasRecord',
     'Set-AliasRecordState',
     'Select-PoolAlias',
@@ -27,5 +28,7 @@ Export-ModuleMember -Function @(
     'Get-GraveyardMailbox',
     'Add-AliasProxy',
     'Move-AliasProxy',
-    'Connect-Aliasaurus'
+    'Connect-Aliasaurus',
+    'Get-ClientPrincipalName',
+    'Test-RequestOwner'
 )

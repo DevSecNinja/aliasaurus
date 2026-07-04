@@ -87,6 +87,20 @@ trusting this repo's `production` environment:
 release-please additionally uses the org-provided `RELEASE_PLEASE_APP_ID`
 variable and `RELEASE_PLEASE_APP_PRIVATE_KEY` secret.
 
+## Web app (Easy Auth)
+
+The web UI is served from the Function App root and protected by App Service
+Authentication (Easy Auth). To enable it:
+
+1. Register an Entra application; add the redirect URI
+   `https://<app>.azurewebsites.net/.auth/login/aad/callback`.
+2. Deploy with the `authClientId` (the Entra app's client ID) and `ownerUpn`
+   (your sign-in address) parameters set. Easy Auth then requires sign-in, and
+   the API additionally enforces that the caller is the owner.
+
+Locally, set `AZURE_FUNCTIONS_ENVIRONMENT=Development` to bypass the owner check
+for testing (Easy Auth is not present locally).
+
 ## Local development
 
 ```sh

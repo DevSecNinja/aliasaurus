@@ -5,6 +5,10 @@ param($Request, $TriggerMetadata)
 try {
     $config = Get-AliasaurusConfig
 
+    if (-not (Test-RequestOwner -Request $Request -Config $config)) {
+        throw (New-AliasError -StatusCode 403 -Message 'Forbidden.')
+    }
+
     $statusFilter = $null
     if ($Request.Query.status) {
         $statusFilter = [string]$Request.Query.status

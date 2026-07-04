@@ -13,6 +13,7 @@
         'Get-AliasaurusConfig',
         'New-AliasLocalPart',
         'New-AliasAddress',
+        'New-SpeakableAlias',
         'New-AliasRecord',
         'Set-AliasRecordState',
         'Select-PoolAlias',
@@ -26,7 +27,9 @@
         'Get-GraveyardMailbox',
         'Add-AliasProxy',
         'Move-AliasProxy',
-        'Connect-Aliasaurus'
+        'Connect-Aliasaurus',
+        'Get-ClientPrincipalName',
+        'Test-RequestOwner'
     )
     CmdletsToExport   = @()
     VariablesToExport = @()

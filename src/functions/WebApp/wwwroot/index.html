@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light dark" />
+  <title>aliasaurus</title>
+  <style>
+    :root {
+      --bg: #0f1115;
+      --card: #171a21;
+      --fg: #e8eaed;
+      --muted: #9aa0a6;
+      --accent: #4f8cff;
+      --danger: #ff5c5c;
+      --ok: #37b24d;
+      --border: #262b33;
+    }
+
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg: #f5f6f8;
+        --card: #fff;
+        --fg: #1a1c20;
+        --muted: #5f6368;
+        --border: #e2e5ea;
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--fg);
+      line-height: 1.5;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    header h1 {
+      font-size: 1.2rem;
+      margin: 0;
+    }
+
+    header a {
+      color: var(--muted);
+      font-size: .85rem;
+    }
+
+    main {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 1rem;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    label {
+      display: block;
+      font-size: .85rem;
+      color: var(--muted);
+      margin-bottom: .25rem;
+    }
+
+    input[type=text],
+    input[type=search] {
+      width: 100%;
+      padding: .6rem .75rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--fg);
+      font-size: 1rem;
+    }
+
+    .row {
+      display: flex;
+      gap: .5rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .checkbox {
+      display: flex;
+      align-items: center;
+      gap: .4rem;
+      margin: .75rem 0;
+      color: var(--muted);
+      font-size: .9rem;
+    }
+
+    button {
+      padding: .6rem 1rem;
+      border-radius: 8px;
+      border: 0;
+      background: var(--accent);
+      color: #fff;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    button.secondary {
+      background: transparent;
+      color: var(--accent);
+      border: 1px solid var(--border);
+    }
+
+    button.danger {
+      background: transparent;
+      color: var(--danger);
+      border: 1px solid var(--border);
+    }
+
+    .result {
+      margin-top: .75rem;
+      padding: .75rem;
+      border-radius: 8px;
+      border: 1px dashed var(--accent);
+      display: none;
+    }
+
+    .result.show {
+      display: block;
+    }
+
+    .addr {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 1.05rem;
+      word-break: break-all;
+    }
+
+    ul.aliases {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    ul.aliases li {
+      border-top: 1px solid var(--border);
+      padding: .75rem 0;
+    }
+
+    .alias-addr {
+      font-family: ui-monospace, monospace;
+      word-break: break-all;
+    }
+
+    .meta {
+      color: var(--muted);
+      font-size: .8rem;
+    }
+
+    .badge {
+      font-size: .7rem;
+      padding: .1rem .4rem;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+    }
+
+    .badge.active {
+      color: var(--ok);
+    }
+
+    .badge.disabled {
+      color: var(--danger);
+    }
+
+    .msg {
+      font-size: .85rem;
+      color: var(--danger);
+      min-height: 1.2em;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>🦕 aliasaurus</h1>
+    <a href="/.auth/logout">Sign out</a>
+  </header>
+
+  <main>
+    <section class="card">
+      <label for="site">Create an alias for a site</label>
+      <div class="row">
+        <input type="text" id="site" placeholder="e.g. example-shop" autocomplete="off" />
+        <button id="createBtn">Create</button>
+      </div>
+      <div class="checkbox">
+        <input type="checkbox" id="speakable" />
+        <label for="speakable" style="margin:0">Speakable (easy to say on the phone)</label>
+      </div>
+      <div class="msg" id="createMsg"></div>
+      <div class="result" id="result">
+        <div class="addr" id="newAddr"></div>
+        <div class="row" style="margin-top:.5rem">
+          <button class="secondary" id="copyBtn">Copy</button>
+          <span class="meta" id="copyState"></span>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <label for="filter">Your aliases</label>
+      <input type="search" id="filter" placeholder="Search by site or address" />
+      <div class="msg" id="listMsg"></div>
+      <ul class="aliases" id="list"></ul>
+    </section>
+  </main>
+
+  <script>
+    const $ = (id) => document.getElementById(id);
+    let all = [];
+
+    async function api(path, options) {
+      const res = await fetch(path, Object.assign({ headers: { "Content-Type": "application/json" } }, options));
+      if (!res.ok) {
+        let detail = res.statusText;
+        try { detail = (await res.json()).error || detail; } catch { /* ignore */ }
+        throw new Error(detail);
+      }
+      return res.status === 204 ? null : res.json();
+    }
+
+    async function createAlias() {
+      $("createMsg").textContent = "";
+      const site = $("site").value.trim();
+      if (!site) { $("createMsg").textContent = "Enter a site name."; return; }
+      $("createBtn").disabled = true;
+      try {
+        const body = { site, format: $("speakable").checked ? "speakable" : "base32" };
+        const alias = await api("/aliases", { method: "POST", body: JSON.stringify(body) });
+        $("newAddr").textContent = alias.address;
+        $("result").classList.add("show");
+        $("copyState").textContent = "";
+        $("site").value = "";
+        await loadList();
+      } catch (e) {
+        $("createMsg").textContent = e.message;
+      } finally {
+        $("createBtn").disabled = false;
+      }
+    }
+
+    async function copyAddr() {
+      const text = $("newAddr").textContent;
+      try {
+        await navigator.clipboard.writeText(text);
+        $("copyState").textContent = "Copied!";
+      } catch {
+        $("copyState").textContent = "Select and copy manually.";
+        const r = document.createRange();
+        r.selectNodeContents($("newAddr"));
+        const sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(r);
+      }
+    }
+
+    function render() {
+      const q = $("filter").value.trim().toLowerCase();
+      const items = all.filter(a =>
+        !q || (a.site || "").toLowerCase().includes(q) || a.address.toLowerCase().includes(q));
+      $("list").innerHTML = "";
+      for (const a of items) {
+        const li = document.createElement("li");
+        const created = a.createdUtc ? new Date(a.createdUtc).toLocaleDateString() : "";
+        li.innerHTML =
+          `<div class="row" style="justify-content:space-between">
+             <div>
+               <div class="alias-addr">${a.address}</div>
+               <div class="meta">${a.site || "(no site)"} · ${created}
+                 <span class="badge ${a.status}">${a.status}</span></div>
+             </div>
+           </div>`;
+        const actions = document.createElement("div");
+        actions.className = "row";
+        actions.style.marginTop = ".5rem";
+        const btn = document.createElement("button");
+        if (a.status === "active") {
+          btn.className = "danger";
+          btn.textContent = "Disable";
+          btn.onclick = () => setState(a.address, "disable", true);
+        } else {
+          btn.className = "secondary";
+          btn.textContent = "Enable";
+          btn.onclick = () => setState(a.address, "enable", false);
+        }
+        actions.appendChild(btn);
+        li.appendChild(actions);
+        $("list").appendChild(li);
+      }
+    }
+
+    async function setState(address, action, confirmFirst) {
+      if (confirmFirst && !confirm(`Disable ${address}? Mail to it will be silently dropped.`)) return;
+      $("listMsg").textContent = "";
+      try {
+        await api(`/aliases/${encodeURIComponent(address)}/${action}`, { method: "POST" });
+        await loadList();
+      } catch (e) {
+        $("listMsg").textContent = e.message;
+      }
+    }
+
+    async function loadList() {
+      try {
+        all = await api("/aliases", { method: "GET" });
+        render();
+      } catch (e) {
+        $("listMsg").textContent = e.message;
+      }
+    }
+
+    $("createBtn").onclick = createAlias;
+    $("copyBtn").onclick = copyAddr;
+    $("filter").oninput = render;
+    $("site").addEventListener("keydown", (e) => { if (e.key === "Enter") createAlias(); });
+    loadList();
+  </script>
+</body>
+
+</html>

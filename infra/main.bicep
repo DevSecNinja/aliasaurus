@@ -25,6 +25,12 @@ param intakeMailboxes string
 @description('Comma-separated graveyard shared mailbox UPNs.')
 param graveyardMailboxes string
 
+@description('The owner UPN allowed to use the app (Easy Auth).')
+param ownerUpn string
+
+@description('Entra app (client) ID for Easy Auth. Leave empty to skip enabling Easy Auth.')
+param authClientId string = ''
+
 var storageName = toLower('${appName}${uniqueString(resourceGroup().id)}')
 var ledgerTableName = 'aliases'
 // Built-in role: Storage Table Data Contributor.
@@ -77,6 +83,7 @@ resource functionApp 'Microsoft.Web/sites@2023-12-01' = {
   properties: {
     serverFarmId: plan.id
     reserved: true
+    httpsOnly: true
     siteConfig: {
       linuxFxVersion: 'PowerShell|7.4'
       ftpsState: 'Disabled'
@@ -88,6 +95,7 @@ resource functionApp 'Microsoft.Web/sites@2023-12-01' = {
         { name: 'ALIAS_DOMAIN', value: aliasDomain }
         { name: 'M365_ORGANIZATION', value: organization }
         { name: 'PRIMARY_MAILBOX', value: primaryMailbox }
+        { name: 'OWNER_UPN', value: ownerUpn }
         { name: 'INTAKE_MAILBOXES', value: intakeMailboxes }
         { name: 'GRAVEYARD_MAILBOXES', value: graveyardMailboxes }
         { name: 'LEDGER_STORAGE_ACCOUNT', value: storage.name }
@@ -108,6 +116,38 @@ resource tableRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01
     principalId: functionApp.identity.principalId
     roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', tableDataContributorRoleId)
     principalType: 'ServicePrincipal'
+  }
+}
+
+// Easy Auth (App Service Authentication) with Entra, requiring sign-in.
+resource authSettings 'Microsoft.Web/sites/config@2023-12-01' = if (!empty(authClientId)) {
+  parent: functionApp
+  name: 'authsettingsV2'
+  properties: {
+    globalValidation: {
+      requireAuthentication: true
+      unauthenticatedClientAction: 'RedirectToLoginPage'
+      redirectToProvider: 'azureactivedirectory'
+    }
+    identityProviders: {
+      azureActiveDirectory: {
+        enabled: true
+        registration: {
+          clientId: authClientId
+          openIdIssuer: '${environment().authentication.loginEndpoint}${tenant().tenantId}/v2.0'
+        }
+        validation: {
+          allowedAudiences: [
+            'api://${authClientId}'
+          ]
+        }
+      }
+    }
+    login: {
+      tokenStore: {
+        enabled: true
+      }
+    }
   }
 }
 

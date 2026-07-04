@@ -16,6 +16,14 @@ stateless, server-less control plane — never its own mail relay, and no extra
 party that can read your mail. See
 [docs/adr/0001-use-m365-as-sole-mail-transport.md](docs/adr/0001-use-m365-as-sole-mail-transport.md).
 
+## Using it
+
+Once deployed, browse to the Function App URL (e.g.
+`https://aliasaurus-func.azurewebsites.net/`). You'll sign in with Entra
+(Easy Auth), then create per-site aliases, copy them, and disable/enable them —
+from laptop or phone. Choose "speakable" for an address that's easy to dictate
+over the phone (e.g. `brave-otter-cactus-42@yourdomain`).
+
 ## Roadmap
 
 - **V1 — receive & manage:** automated alias creation (Exchange Online

@@ -34,6 +34,7 @@ function Get-AliasaurusConfig {
         Domain               = $domain
         Organization         = Get-Setting 'M365_ORGANIZATION' ''
         PrimaryMailbox       = Get-Setting 'PRIMARY_MAILBOX' ''
+        OwnerUpn             = Get-Setting 'OWNER_UPN' ''
         IntakeMailboxes      = Split-List (Get-Setting 'INTAKE_MAILBOXES' '')
         GraveyardMailboxes   = Split-List (Get-Setting 'GRAVEYARD_MAILBOXES' '')
         StorageAccount       = Get-Setting 'LEDGER_STORAGE_ACCOUNT' ''
