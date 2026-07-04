@@ -1,0 +1,123 @@
+openapi: 3.0.3
+info:
+  title: aliasaurus Control API (V1)
+  version: 1.0.0
+  description: >
+    Control-plane HTTP API for issuing and managing disposable per-site email
+    aliases. All mail transport is handled by Exchange Online; this API only
+    manages alias state and metadata. Hosted as Azure Functions; callers
+    authenticate with the function's configured auth (out of scope for the spec).
+paths:
+  /aliases:
+    get:
+      summary: List all aliases (inventory)
+      operationId: listAliases
+      parameters:
+        - name: status
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [active, disabled]
+          description: Optional filter. Pool entries are never returned.
+      responses:
+        "200":
+          description: Inventory of aliases
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Alias"
+    post:
+      summary: Issue a new alias for a site (served from the warm pool)
+      operationId: createAlias
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [site]
+              properties:
+                site:
+                  type: string
+                  description: Human label for where the alias will be used.
+                note:
+                  type: string
+      responses:
+        "201":
+          description: Alias issued and active on first use
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Alias"
+        "503":
+          description: >
+            Pool depleted and on-demand fallback could not produce an
+            immediately usable alias; retry later.
+        "507":
+          description: Alias capacity exhausted across all intake mailboxes.
+  /aliases/{address}/disable:
+    post:
+      summary: Disable an alias (silent drop, no bounce)
+      operationId: disableAlias
+      parameters:
+        - $ref: "#/components/parameters/Address"
+      responses:
+        "200":
+          description: Alias disabled
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Alias"
+        "404":
+          description: Alias not found
+  /aliases/{address}/enable:
+    post:
+      summary: Re-enable a previously disabled alias
+      operationId: enableAlias
+      parameters:
+        - $ref: "#/components/parameters/Address"
+      responses:
+        "200":
+          description: Alias re-enabled
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Alias"
+        "404":
+          description: Alias not found
+components:
+  parameters:
+    Address:
+      name: address
+      in: path
+      required: true
+      schema:
+        type: string
+      description: The full alias SMTP address.
+  schemas:
+    Alias:
+      type: object
+      required: [address, status]
+      properties:
+        address:
+          type: string
+          example: k7m2q9x4rt5v@example.com
+        site:
+          type: string
+          nullable: true
+        status:
+          type: string
+          enum: [active, disabled]
+        createdUtc:
+          type: string
+          format: date-time
+        assignedUtc:
+          type: string
+          format: date-time
+          nullable: true
+        note:
+          type: string
+          nullable: true
