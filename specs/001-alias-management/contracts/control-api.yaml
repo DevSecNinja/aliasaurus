@@ -1,3 +1,4 @@
+---
 openapi: 3.0.3
 info:
   title: aliasaurus Control API (V1)
@@ -18,7 +19,9 @@ paths:
           required: false
           schema:
             type: string
-            enum: [active, disabled]
+            enum:
+              - active
+              - disabled
           description: Optional filter. Pool entries are never returned.
       responses:
         "200":
@@ -38,7 +41,8 @@ paths:
           application/json:
             schema:
               type: object
-              required: [site]
+              required:
+                - site
               properties:
                 site:
                   type: string
@@ -100,7 +104,9 @@ components:
   schemas:
     Alias:
       type: object
-      required: [address, status]
+      required:
+        - address
+        - status
       properties:
         address:
           type: string
@@ -110,7 +116,9 @@ components:
           nullable: true
         status:
           type: string
-          enum: [active, disabled]
+          enum:
+            - active
+            - disabled
         createdUtc:
           type: string
           format: date-time

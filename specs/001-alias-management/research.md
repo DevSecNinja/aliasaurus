@@ -13,9 +13,9 @@ All decisions keep Microsoft 365 / Exchange Online as the sole mail transport
   shared mailbox needs no license; all alias mail converges to one place we
   control; changes are scriptable and readable via Graph (`proxyAddresses`).
 - **Alternatives considered**:
-  - *Plus addressing* — guessable (a spammer strips `+tag`); fails FR-002.
-  - *Catch-all* — no per-address control and invites dictionary spam; rejected.
-  - *One mailbox/contact/distribution group per alias* — heavy, and Graph cannot
+  - _Plus addressing_ — guessable (a spammer strips `+tag`); fails FR-002.
+  - _Catch-all_ — no per-address control and invites dictionary spam; rejected.
+  - _One mailbox/contact/distribution group per alias_ — heavy, and Graph cannot
     create mail-enabled security groups/distribution lists; excessive overhead.
 
 ## Decision 2 — Delivery to the primary inbox: mailbox forwarding
@@ -42,9 +42,9 @@ All decisions keep Microsoft 365 / Exchange Online as the sole mail transport
   per-alias rules. Verified: the "Delete the message without notifying anyone"
   mail-flow action exists in Exchange Online.
 - **Alternatives**:
-  - *Remove the proxy address* — makes the address unknown, producing an NDR;
+  - _Remove the proxy address_ — makes the address unknown, producing an NDR;
     violates the spec's silent-drop assumption.
-  - *Per-alias transport/inbox rules* — hit Exchange rule count/size limits and
+  - _Per-alias transport/inbox rules_ — hit Exchange rule count/size limits and
     do not scale to hundreds of aliases.
 - **Trade-offs / open items**: The 300-proxy cap also applies to the graveyard
   mailbox (add more as needed). Proxy moves are subject to directory propagation,
@@ -96,7 +96,7 @@ All decisions keep Microsoft 365 / Exchange Online as the sole mail transport
 - **Rationale**: Cheap, server-less, key-value lookups by alias; sufficient for
   single-user scale. Holds metadata only, never message contents.
 - **Alternatives**: Cosmos DB (overkill/cost); a mailbox folder as a store
-  (fragile). 
+  (fragile).
 
 ## Cross-cutting
 

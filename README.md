@@ -23,7 +23,7 @@ party that can read your mail. See
   metadata ledger (alias → site, created, enabled, notes), and a per-alias
   kill switch. Inspection via Microsoft Graph.
 - **V2 — reply-from:** a Graph-driven header-rewriting reply relay so you can
-  reply *as* an alias from any client, including Outlook for iOS.
+  reply _as_ an alias from any client, including Outlook for iOS.
 
 ## Development
 

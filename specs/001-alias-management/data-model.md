@@ -10,16 +10,16 @@ Stored in Azure Table Storage table `aliases`.
 - **PartitionKey**: intake domain (e.g. `example.com`).
 - **RowKey**: the full alias address (e.g. `k7m2q9x4rt5v@example.com`) — unique.
 
-| Field | Type | Notes |
-|-------|------|-------|
-| `address` | string | The alias SMTP address (mirrors RowKey). |
-| `site` | string | Human label for where the alias is used. Not unique; null while the entry is a warm-pool entry. |
-| `status` | enum | `pool` \| `active` \| `disabled`. |
-| `hostMailbox` | string | UPN of the mailbox currently holding the proxy (intake or graveyard). |
-| `createdUtc` | datetime | When the proxy address was created (warming start). |
-| `assignedUtc` | datetime? | When issued to a site (pool → active). |
-| `disabledUtc` | datetime? | Last time it was disabled. |
-| `note` | string? | Optional free-text note. |
+| Field         | Type      | Notes                                                                                           |
+| ------------- | --------- | ----------------------------------------------------------------------------------------------- |
+| `address`     | string    | The alias SMTP address (mirrors RowKey).                                                        |
+| `site`        | string    | Human label for where the alias is used. Not unique; null while the entry is a warm-pool entry. |
+| `status`      | enum      | `pool` \| `active` \| `disabled`.                                                               |
+| `hostMailbox` | string    | UPN of the mailbox currently holding the proxy (intake or graveyard).                           |
+| `createdUtc`  | datetime  | When the proxy address was created (warming start).                                             |
+| `assignedUtc` | datetime? | When issued to a site (pool → active).                                                          |
+| `disabledUtc` | datetime? | Last time it was disabled.                                                                      |
+| `note`        | string?   | Optional free-text note.                                                                        |
 
 ### State transitions
 
@@ -31,6 +31,7 @@ disabled  --enable-->               status = active     (proxy moved back to int
 ```
 
 Rules:
+
 - An `active` or `disabled` alias MUST have a non-null `site`.
 - `RowKey`/`address` MUST be unique across the table (FR-002, FR-012).
 - Only `pool` entries may be selected for issuance (FR-011/FR-014).

@@ -108,6 +108,7 @@ made by editing this file via pull request, with a Sync Impact Report and a
 version bump.
 
 Versioning follows semantic versioning:
+
 - MAJOR: backward-incompatible governance or principle removal/redefinition.
 - MINOR: a new principle or section, or materially expanded guidance.
 - PATCH: clarifications, wording, or non-semantic refinements.
