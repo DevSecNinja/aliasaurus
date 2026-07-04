@@ -5,6 +5,13 @@ skip-check:
   # Easy Auth is configured via the authsettingsV2 resource (conditional on
   # authClientId); the app also enforces an owner check in code.
   - CKV_AZURE_13
+  # Telemetry uses Application Insights (configured in host.json); classic App
+  # Service HTTP logging is low-value for a serverless Function app.
+  - CKV_AZURE_63
+  # Detailed error messages: see CKV_AZURE_63 (App Insights is the telemetry path).
+  - CKV_AZURE_65
+  # Failed request tracing: see CKV_AZURE_63 (App Insights is the telemetry path).
+  - CKV_AZURE_66
   # Storage access uses the managed identity (AzureWebJobsStorage__accountName).
   # A content file-share connection string would reintroduce a stored secret,
   # which violates the project's no-secrets / managed-identity principle.
@@ -13,4 +20,4 @@ skip-check:
   # disabling public network access would defeat its purpose.
   - CKV_AZURE_222
   # ".NET Framework version" check is not applicable to a PowerShell Function app.
-  - CKV_AZURE_84
+  - CKV_AZURE_80

@@ -88,9 +88,6 @@ resource functionApp 'Microsoft.Web/sites@2023-12-01' = {
       linuxFxVersion: 'PowerShell|7.4'
       ftpsState: 'Disabled'
       minTlsVersion: '1.2'
-      httpLoggingEnabled: true
-      detailedErrorLoggingEnabled: true
-      requestTracingEnabled: true
       appSettings: [
         { name: 'FUNCTIONS_EXTENSION_VERSION', value: '~4' }
         { name: 'FUNCTIONS_WORKER_RUNTIME', value: 'powershell' }
