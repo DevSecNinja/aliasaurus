@@ -1,5 +1,10 @@
 # aliasaurus 🦕
 
+> [!WARNING]
+> **Proof of Concept.** This project is an exploratory proof of concept and is
+> **not in production use** — the author is not running it. Expect rough edges,
+> breaking changes, and unimplemented pieces. Use at your own risk.
+
 Self-service, disposable per-site email aliases on your own domain, backed
 entirely by **Microsoft 365** — an M365-native alternative to Apple's
 "Hide My Email".
