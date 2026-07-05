@@ -11,6 +11,7 @@ Export-ModuleMember -Function @(
     'New-AliasError',
     'Resolve-AliasErrorStatus',
     'ConvertTo-AliasResponse',
+    'Get-BodyProperty',
     'Get-AliasaurusConfig',
     'New-AliasLocalPart',
     'New-AliasAddress',

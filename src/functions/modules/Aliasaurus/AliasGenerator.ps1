@@ -42,8 +42,10 @@ function New-AliasAddress {
         [int]$Length = 12
     )
 
-    $existing = [System.Collections.Generic.HashSet[string]]::new(
-        [string[]]$ExistingAddresses, [System.StringComparer]::OrdinalIgnoreCase)
+    $existing = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
+    foreach ($addr in $ExistingAddresses) {
+        if ($addr) { [void]$existing.Add([string]$addr) }
+    }
 
     for ($attempt = 0; $attempt -lt 25; $attempt++) {
         $candidate = '{0}@{1}' -f (New-AliasLocalPart -Length $Length), $Domain
@@ -88,8 +90,10 @@ function New-SpeakableAlias {
         [int]$WordCount = 3
     )
 
-    $existing = [System.Collections.Generic.HashSet[string]]::new(
-        [string[]]$ExistingAddresses, [System.StringComparer]::OrdinalIgnoreCase)
+    $existing = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
+    foreach ($addr in $ExistingAddresses) {
+        if ($addr) { [void]$existing.Add([string]$addr) }
+    }
 
     for ($attempt = 0; $attempt -lt 25; $attempt++) {
         $words = for ($i = 0; $i -lt $WordCount; $i++) {
