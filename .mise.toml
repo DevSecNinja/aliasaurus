@@ -4,7 +4,7 @@
 # config and fails with guidance if a tool it needs is not pinned here.
 [tools]
 uv = "latest"
-dprint = "0.55.1"
+dprint = "0.55.2"
 yamlfmt = "0.21.0"
 actionlint = "1.7.12"
 gitleaks = "8.30.1"
