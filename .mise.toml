@@ -13,7 +13,7 @@ shfmt = "3.13.1"
 trivy = "0.74.0"
 zizmor = "1.29.0"
 "pipx:yamllint" = "1.38.0"
-"pipx:checkov" = "3.3.13"
+"pipx:checkov" = "3.3.15"
 
 [tasks.test]
 description = "Run Pester unit tests"
